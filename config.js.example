@@ -1,0 +1,23 @@
+// Lab Dashboard 服务配置模板
+// 复制本文件为 config.js 后填入实际域名
+
+window.LAB_SERVICES = [
+  {
+    category: "开发 & 生产力",
+    categoryIcon: "🛠️",
+    categoryId: "dev",
+    items: [
+      { title: "Scrumboy", href: "https://scrumboy.example.com", domain: "scrumboy.example.com", desc: "轻量级看板与项目管理工具", icon: "📋", avatarClass: "accent" },
+      { title: "n8n", href: "https://n8n.example.com", domain: "n8n.example.com", desc: "开源工作流自动化平台", icon: "⚡", avatarClass: "amber" }
+    ]
+  },
+  {
+    category: "数据分析",
+    categoryIcon: "📈",
+    categoryId: "bi",
+    items: [
+      { title: "Metabase", href: "https://bi.example.com", domain: "bi.example.com", desc: "开源 BI 分析平台", icon: "📊", avatarClass: "success" }
+    ]
+  }
+  // 按需添加更多分类和服务...
+];
