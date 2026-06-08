@@ -292,14 +292,9 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 18px 20px;
             transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
             display: flex;
             flex-direction: column;
-            gap: 10px;
             position: relative;
             overflow: hidden;
         }
@@ -320,10 +315,23 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
-        .card:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-            border-color: var(--accent-border);
+        .card-main {
+            padding: 18px 20px 0;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .card-main:hover { cursor: pointer; }
+        .card-main:focus-visible {
+            outline: none;
+        }
+
+        .card-main:focus-visible .card-title {
+            color: var(--accent);
         }
 
         .card-header {
@@ -392,7 +400,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 4px;
+            padding: 12px 20px 18px;
+            gap: 8px;
         }
 
         .badge {
@@ -428,8 +437,7 @@
             transition: opacity 0.2s;
         }
 
-        .card:hover .card-arrow,
-        .card:focus-visible .card-arrow {
+        .card:hover .card-arrow {
             opacity: 1;
         }
 
@@ -523,11 +531,14 @@
             margin-left: auto;
             margin-right: 8px;
         }
-        .source-link[href] {
+        .source-link {
+            cursor: pointer;
+        }
+        .source-link:not(.original) {
             color: var(--accent);
             background: var(--accent-soft);
         }
-        .source-link[href]:hover {
+        .source-link:not(.original):hover {
             background: var(--accent-border);
         }
         .source-link.original {
@@ -717,12 +728,13 @@
     (function() {
         function getSourceLabel(source) {
             if (!source) return '';
+            const esc = s => s.replace(/"/g, '&quot;').replace(/'/g, "\'");
             if (source.type === 'github') {
-                return `<a class="source-link" href="${source.url}" target="_blank" rel="noopener noreferrer" title="${source.note || '开源项目'}">⭐ 开源</a>`;
+                return `<a class="source-link" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer" title="${esc(source.note || '开源项目')}">⭐ 开源</a>`;
             } else if (source.type === 'original') {
-                return `<span class="source-link original" title="${source.note || '原创作品'}">✨ 原创</span>`;
+                return `<span class="source-link original" title="${esc(source.note || '原创作品')}">✨ 原创</span>`;
             } else if (source.type === 'fork') {
-                return `<a class="source-link fork" href="${source.url}" target="_blank" rel="noopener noreferrer" title="${source.note || '基于开源项目改造'}">🍴 改造</a>`;
+                return `<a class="source-link fork" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer" title="${esc(source.note || '基于开源项目改造')}">🍴 改造</a>`;
             }
             return '';
         }
@@ -743,22 +755,24 @@
                     </div>
                     <div class="grid">
                         ${cat.items.map(item => `
-                        <a class="card" href="${item.href}" target="_blank" rel="noopener noreferrer">
-                            <div class="card-header">
-                                <div class="card-avatar ${item.avatarClass}" aria-hidden="true">${item.icon}</div>
-                                <div class="card-title-wrap">
-                                    <div class="card-title">${item.title}</div>
-                                    <div class="card-url">${item.domain}</div>
+                        <div class="card">
+                            <a class="card-main" href="${item.href}" target="_blank" rel="noopener noreferrer">
+                                <div class="card-header">
+                                    <div class="card-avatar ${item.avatarClass}" aria-hidden="true">${item.icon}</div>
+                                    <div class="card-title-wrap">
+                                        <div class="card-title">${item.title}</div>
+                                        <div class="card-url">${item.domain}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <p class="card-desc">${item.desc}</p>
-                            ${item.source && item.source.note ? `<p class="card-note">${item.source.note}</p>` : ''}
+                                <p class="card-desc">${item.desc}</p>
+                                ${item.source && item.source.note ? `<p class="card-note">${item.source.note}</p>` : ''}
+                            </a>
                             <div class="card-footer">
                                 <span class="badge online">● 运行中</span>
                                 ${getSourceLabel(item.source)}
                                 <span class="card-arrow" aria-hidden="true">→</span>
                             </div>
-                        </a>
+                        </div>
                         `).join('')}
                     </div>
                 </section>
